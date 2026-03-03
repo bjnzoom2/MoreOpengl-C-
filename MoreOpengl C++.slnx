@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="MoreOpengl C++.vcxproj" Id="17a9491f-351e-4c70-9a04-2d28d0a07f4a" />
+</Solution>
