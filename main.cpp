@@ -16,9 +16,10 @@ const char* vertexShaderSource = "#version 330 core\n"
 
 const char* fragmentShaderSource = "#version 330 core\n"
 "out vec4 FragColor;\n"
+"uniform vec4 color;\n"
 "void main()\n"
 "{\n"
-"   FragColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);\n"
+"   FragColor = color;\n"
 "}\0";
 
 int main() {
@@ -53,6 +54,8 @@ int main() {
 	glAttachShader(shaderProgram, vertexShader);
 	glAttachShader(shaderProgram, fragmentShader);
 	glLinkProgram(shaderProgram);
+
+	unsigned int color = glGetUniformLocation(shaderProgram, "color");
 
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
@@ -90,6 +93,8 @@ int main() {
 
 	while (!glfwWindowShouldClose(window)) {
 		glUseProgram(shaderProgram);
+		float sinVal = sin(glfwGetTime()) / 2.0f + 0.5f;
+		glUniform4f(color, sinVal, 0.0f, 0.0f, 1.0f); 
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLE_FAN, 0, vertices.size() / 2);
 
