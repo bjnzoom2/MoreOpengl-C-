@@ -5,13 +5,13 @@
 #include <glm/glm.hpp>
 
 const unsigned int WIDTH = 800;
-const unsigned int HEIGHT = 600;
+const unsigned int HEIGHT = 800;
 
 const char* vertexShaderSource = "#version 330 core\n"
 "layout (location = 0) in vec2 aPos;\n"
 "void main()\n"
 "{\n"
-"   gl_Position = vec4(aPos.x, aPos.y);\n"
+"   gl_Position = vec4(aPos.x, aPos.y, 0.0f, 1.0f);\n"
 "}\0";
 
 const char* fragmentShaderSource = "#version 330 core\n"
@@ -57,24 +57,22 @@ int main() {
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
-	float vertices[] = {
-		-0.5f, -0.5f, 
-		0.5f, -0.5f,
-		0.0f,  0.5f, 
-	};
+	int res = 50;
 
-	/*float posX = 0.0f;
+	std::vector<float> vertices = {};
+
+	float posX = 0.0f;
 	float posY = 0.0f;
 	float rad = 0.5f;
 	vertices.push_back(posX);
 	vertices.push_back(posY);
-	for (int i = 0; i <= 50; i++) {
-		float angle = 2.0f * 3.14159265359 * (static_cast<float>(i) / 50);
+	for (int i = 0; i <= res; i++) {
+		float angle = 2.0f * 3.14159265359 * (static_cast<float>(i) / res);
 		float x = posX + cos(angle) * rad;
 		float y = posY + sin(angle) * rad;
 		vertices.push_back(x);
 		vertices.push_back(y);
-	}*/
+	}
 
 	unsigned int VAO, VBO;
 	glGenVertexArrays(1, &VAO);
@@ -82,7 +80,7 @@ int main() {
 
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
@@ -93,7 +91,7 @@ int main() {
 	while (!glfwWindowShouldClose(window)) {
 		glUseProgram(shaderProgram);
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawArrays(GL_TRIANGLE_FAN, 0, vertices.size() / 2);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
