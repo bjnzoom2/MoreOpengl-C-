@@ -66,7 +66,7 @@ int main() {
 
 	float posX = 0.0f;
 	float posY = 0.0f;
-	float rad = 0.5f;
+	float rad = 0.25f;
 	vertices.push_back(posX);
 	vertices.push_back(posY);
 	for (int i = 0; i <= res; i++) {
