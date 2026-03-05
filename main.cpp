@@ -1,26 +1,14 @@
 #include <iostream>
 #include <vector>
+#include <filesystem>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
+#include "shader.h"
+
 const unsigned int WIDTH = 800;
 const unsigned int HEIGHT = 800;
-
-const char* vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec2 aPos;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, 0.0f, 1.0f);\n"
-"}\0";
-
-const char* fragmentShaderSource = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"uniform vec4 color;\n"
-"void main()\n"
-"{\n"
-"   FragColor = color;\n"
-"}\0";
 
 int main() {
 	glfwInit();
@@ -39,7 +27,7 @@ int main() {
 	gladLoadGL();
 	glViewport(0, 0, WIDTH, HEIGHT);
 
-	unsigned int vertexShader;
+	/*unsigned int vertexShader;
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
 	glCompileShader(vertexShader);
@@ -58,7 +46,11 @@ int main() {
 	unsigned int color = glGetUniformLocation(shaderProgram, "color");
 
 	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
+	glDeleteShader(fragmentShader);*/;
+	std::filesystem::path vertexPath{ R"(C:\Users\luken\source\repos\MoreOpengl C++\vertex.glsl)" };
+	std::filesystem::path fragmentPath{ R"(C:\Users\luken\source\repos\MoreOpengl C++\fragment.glsl)" };
+
+	Shader shaderProgram(vertexPath.string().c_str(), fragmentPath.string().c_str());
 
 	int res = 50;
 
@@ -92,9 +84,10 @@ int main() {
 	glBindVertexArray(0);
 
 	while (!glfwWindowShouldClose(window)) {
-		glUseProgram(shaderProgram);
-		float sinVal = sin(glfwGetTime()) / 2.0f + 0.5f;
-		glUniform4f(color, sinVal, 0.0f, 0.0f, 1.0f); 
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		shaderProgram.use();
+		shaderProgram.setVec4("color", { 1.0f, 0.0f, 0.0f, 1.0f });
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLE_FAN, 0, vertices.size() / 2);
 
@@ -104,7 +97,7 @@ int main() {
 
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
-	glDeleteProgram(shaderProgram);
+	glDeleteProgram(shaderProgram.ID);
 	glfwTerminate();
 
 	return 0;
