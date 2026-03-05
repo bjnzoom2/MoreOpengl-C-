@@ -72,9 +72,21 @@ int main() {
 		vertices.push_back(x);
 		vertices.push_back(y);
 
-		vertices.push_back(1.0f);
-		vertices.push_back(1.0f);
-		vertices.push_back(1.0f);
+		if (i % 3 == 0) {
+			vertices.push_back(1.0f);
+			vertices.push_back(0.0f);
+			vertices.push_back(0.0f);
+		}
+		else if (i % 3 == 1) {
+			vertices.push_back(0.0f);
+			vertices.push_back(1.0f);
+			vertices.push_back(0.0f);
+		}
+		else {
+			vertices.push_back(0.0f);
+			vertices.push_back(0.0f);
+			vertices.push_back(1.0f);
+		}
 	}
 
 	unsigned int VAO, VBO;
