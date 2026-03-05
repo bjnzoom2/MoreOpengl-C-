@@ -61,12 +61,20 @@ int main() {
 	float rad = 0.25f;
 	vertices.push_back(posX);
 	vertices.push_back(posY);
+
+	vertices.push_back(1.0f);
+	vertices.push_back(1.0f);
+	vertices.push_back(1.0f);
 	for (int i = 0; i <= res; i++) {
 		float angle = 2.0f * 3.14159265359 * (static_cast<float>(i) / res);
 		float x = posX + cos(angle) * rad;
 		float y = posY + sin(angle) * rad;
 		vertices.push_back(x);
 		vertices.push_back(y);
+
+		vertices.push_back(1.0f);
+		vertices.push_back(1.0f);
+		vertices.push_back(1.0f);
 	}
 
 	unsigned int VAO, VBO;
@@ -77,8 +85,10 @@ int main() {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
@@ -87,7 +97,7 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		shaderProgram.use();
-		shaderProgram.setVec4("color", { 1.0f, 0.0f, 0.0f, 1.0f });
+		//shaderProgram.setVec4("color", { 1.0f, 0.0f, 0.0f, 1.0f });
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLE_FAN, 0, vertices.size() / 2);
 
