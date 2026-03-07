@@ -4,6 +4,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "shader.h"
 
@@ -55,38 +57,28 @@ int main() {
 	int res = 50;
 
 	std::vector<float> vertices = {};
+	glm::vec2 position(0.0f, 0.0f);
+	glm::vec2 velocity(0.0f, 0.0f);
 
-	float posX = 0.0f;
-	float posY = 0.0f;
 	float rad = 0.25f;
-	vertices.push_back(posX);
-	vertices.push_back(posY);
+	vertices.push_back(position.x);
+	vertices.push_back(position.y);
+	vertices.push_back(0.0f);
 
-	vertices.push_back(1.0f);
+	vertices.push_back(1.0f);	
 	vertices.push_back(1.0f);
 	vertices.push_back(1.0f);
 	for (int i = 0; i <= res; i++) {
 		float angle = 2.0f * 3.14159265359 * (static_cast<float>(i) / res);
-		float x = posX + cos(angle) * rad;
-		float y = posY + sin(angle) * rad;
+		float x = position.x + cos(angle) * rad;
+		float y = position.y + sin(angle) * rad;
 		vertices.push_back(x);
 		vertices.push_back(y);
+		vertices.push_back(0.0f);
 
-		if (i % 3 == 0) {
-			vertices.push_back(1.0f);
-			vertices.push_back(0.0f);
-			vertices.push_back(0.0f);
-		}
-		else if (i % 3 == 1) {
-			vertices.push_back(0.0f);
-			vertices.push_back(1.0f);
-			vertices.push_back(0.0f);
-		}
-		else {
-			vertices.push_back(0.0f);
-			vertices.push_back(0.0f);
-			vertices.push_back(1.0f);
-		}
+		vertices.push_back(1.0f);
+		vertices.push_back(1.0f);	
+		vertices.push_back(1.0f);
 	}
 
 	unsigned int VAO, VBO;
@@ -97,21 +89,34 @@ int main() {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
-	while (!glfwWindowShouldClose(window)) {
-		glClear(GL_COLOR_BUFFER_BIT);
+	float deltatime;
+	float currentTime = glfwGetTime();
+	float previousTime = 0;
 
+	while (!glfwWindowShouldClose(window)) {
+		deltatime = currentTime - previousTime;
+		previousTime = currentTime;
+		currentTime = glfwGetTime();
+
+		glClear(GL_COLOR_BUFFER_BIT);
 		shaderProgram.use();
 		//shaderProgram.setVec4("color", { 1.0f, 0.0f, 0.0f, 1.0f });
+		glm::mat4 trans = glm::mat4(1.0f);
+		trans = glm::translate(trans, glm::vec3(velocity, 0.0f));
+		shaderProgram.setMat4("transform", trans);
+
+		velocity.y -= 0.5 * deltatime;
+		
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLE_FAN, 0, vertices.size() / 2);
+		glDrawArrays(GL_TRIANGLE_FAN, 0, vertices.size() / 6);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

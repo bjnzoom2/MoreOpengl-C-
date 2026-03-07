@@ -4,6 +4,7 @@
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <string>
 #include <fstream>
@@ -70,8 +71,11 @@ public:
     void setFloat(const std::string& name, float value) const {
         glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
     }
-    void setVec4(const std::string& name, glm::vec4 value) const {
-        glUniform4f(glGetUniformLocation(ID, name.c_str()), value.x, value.y, value.z, value.w);
+    void setVec4(const std::string& name, glm::vec4 vec) const {
+        glUniform4f(glGetUniformLocation(ID, name.c_str()), vec.x, vec.y, vec.z, vec.w);
+    }
+    void setMat4(const std::string& name, glm::mat4 mat) const {
+        glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(mat));
     }
 };
 
