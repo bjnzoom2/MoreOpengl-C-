@@ -57,10 +57,11 @@ int main() {
 	int res = 50;
 
 	std::vector<float> vertices = {};
-	glm::vec2 position(0.0f, 0.0f);
+	glm::vec2 position(0.0f, 0.875f);
 	glm::vec2 velocity(0.0f, 0.0f);
+	glm::vec2 acceleration(0.0f, 0.0f);
 
-	float rad = 0.25f;
+	float rad = 0.125f;
 	vertices.push_back(position.x);
 	vertices.push_back(position.y);
 	vertices.push_back(0.0f);
@@ -113,7 +114,10 @@ int main() {
 		trans = glm::translate(trans, glm::vec3(velocity, 0.0f));
 		shaderProgram.setMat4("transform", trans);
 
-		velocity.y -= 0.5 * deltatime;
+		velocity.x += acceleration.x * deltatime;
+		velocity.y += acceleration.y * deltatime;
+
+		acceleration.y -= 1 * deltatime;
 		
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLE_FAN, 0, vertices.size() / 6);
