@@ -12,6 +12,8 @@
 const unsigned int WIDTH = 800;
 const unsigned int HEIGHT = 800;
 
+std::vector<Object> objs = {};
+
 int main() {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -101,7 +103,8 @@ int main() {
 	glm::vec2 position(0.0f, 0.875f);
 	glm::vec2 velocity(0.0f, 0.0f);
 	glm::vec2 acceleration(0.0f, 0.0f);
-	Object obj(position, velocity, acceleration, 1, 0.125f);
+	Object obj1(position, velocity, acceleration, 1, 0.125f);
+	objs.push_back(obj1);
 
 	float deltatime;
 	float currentTime = glfwGetTime();
@@ -113,25 +116,27 @@ int main() {
 		currentTime = glfwGetTime();
 
 		glClear(GL_COLOR_BUFFER_BIT);
-		shaderProgram.use();
-		//shaderProgram.setVec4("color", { 1.0f, 0.0f, 0.0f, 1.0f });
-		glm::mat4 trans = glm::mat4(1.0f);
-		trans = glm::translate(trans, glm::vec3(obj.velocity, 0.0f));
-		shaderProgram.setMat4("transform", trans);
+		for (auto& obj : objs) {
+			shaderProgram.use();
+			//shaderProgram.setVec4("color", { 1.0f, 0.0f, 0.0f, 1.0f });
+			glm::mat4 trans = glm::mat4(1.0f);
+			trans = glm::translate(trans, glm::vec3(obj.velocity, 0.0f));
+			shaderProgram.setMat4("transform", trans);
 
-		obj.velocity.x += obj.acceleration.x * deltatime;
-		obj.velocity.y += obj.acceleration.y * deltatime;
+			obj.velocity.x += obj.acceleration.x * deltatime;
+			obj.velocity.y += obj.acceleration.y * deltatime;
 
-		obj.acceleration.y -= 1 * deltatime;
-		
-		obj.draw();
+			obj.acceleration.y -= 1 * deltatime;
+
+			obj.draw();
+		}
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
-	glDeleteVertexArrays(1, &obj.Vao.vao);
-	glDeleteBuffers(1, &obj.Vao.vbo);
+	glDeleteVertexArrays(1, &obj1.Vao.vao);
+	glDeleteBuffers(1, &obj1.Vao.vbo);
 	glDeleteProgram(shaderProgram.ID);
 	glfwTerminate();
 
