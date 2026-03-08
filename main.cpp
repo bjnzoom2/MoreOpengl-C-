@@ -11,6 +11,7 @@
 
 const unsigned int WIDTH = 800;
 const unsigned int HEIGHT = 800;
+const float G_CONST = 6.67430e-11;
 
 std::vector<Object> objs = {};
 
@@ -100,15 +101,14 @@ int main() {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0); */
 
-	glm::vec2 position(0.0f, 0.875f);
-	glm::vec2 velocity(0.0f, 0.0f);
-	glm::vec2 acceleration(0.0f, 0.0f);
-	Object obj1(position, velocity, acceleration, 1, 0.125f);
+	Object obj1({ -0.5f, 0.0f }, { 0.0f, 0.0f }, 7.34767309e7, 0.125f);
+	Object obj2({ 0.5f, 0.0f }, { 0.0f, 0.0f }, 7.34767309e7, 0.125f);
 	objs.push_back(obj1);
+	objs.push_back(obj2);
 
 	float deltatime;
 	float currentTime = glfwGetTime();
-	float previousTime = 0;
+	float previousTime = 0.0f;
 
 	while (!glfwWindowShouldClose(window)) {
 		deltatime = currentTime - previousTime;
@@ -116,27 +116,35 @@ int main() {
 		currentTime = glfwGetTime();
 
 		glClear(GL_COLOR_BUFFER_BIT);
-		for (auto& obj : objs) {
+		for (int i = 0; i < objs.size(); i++) {
 			shaderProgram.use();
-			//shaderProgram.setVec4("color", { 1.0f, 0.0f, 0.0f, 1.0f });
+			Object& obj = objs[i];
+			obj.draw();
+			for (int j = i + 1; j < objs.size(); j++) {
+				Object& obj_2 = objs[j];
+				float dist2 = glm::distance(obj.position, obj_2.position) * glm::distance(obj.position, obj_2.position);
+				float gForce = G_CONST * (obj.mass * obj_2.mass / dist2);
+				glm::vec2 dir = glm::normalize(obj_2.position - obj.position);
+
+				obj.totalForce += gForce * dir;
+				obj_2.totalForce -= gForce * dir;
+			}
+			obj.accelerate(deltatime);
 			glm::mat4 trans = glm::mat4(1.0f);
-			trans = glm::translate(trans, glm::vec3(obj.velocity, 0.0f));
+			trans = glm::translate(trans, glm::vec3(obj.position, 0.0f));
 			shaderProgram.setMat4("transform", trans);
 
-			obj.velocity.x += obj.acceleration.x * deltatime;
-			obj.velocity.y += obj.acceleration.y * deltatime;
-
-			obj.acceleration.y -= 1 * deltatime;
-
-			obj.draw();
+			obj.totalForce = glm::vec2(0.0f);
 		}
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-
-	glDeleteVertexArrays(1, &obj1.Vao.vao);
-	glDeleteBuffers(1, &obj1.Vao.vbo);
+	
+	for (auto& obj : objs) {
+		glDeleteVertexArrays(1, &obj.Vao.vao);
+		glDeleteBuffers(1, &obj.Vao.vbo);
+	}
 	glDeleteProgram(shaderProgram.ID);
 	glfwTerminate();
 
