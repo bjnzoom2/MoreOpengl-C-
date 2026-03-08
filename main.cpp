@@ -101,8 +101,8 @@ int main() {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0); */
 
-	Object obj1({ -0.5f, 0.0f }, { 0.0f, 0.0f }, 7.34767309e7, 0.125f);
-	Object obj2({ 0.5f, 0.0f }, { 0.0f, 0.0f }, 7.34767309e7, 0.125f);
+	Object obj1({ -0.5f, 0.0f }, { 0.0f, 0.0f }, 1e9, 0.125f);
+	Object obj2({ 0.5f, 0.0f }, { 0.0f, 0.0f }, 1e9, 0.125f);
 	objs.push_back(obj1);
 	objs.push_back(obj2);
 
@@ -116,6 +116,13 @@ int main() {
 		currentTime = glfwGetTime();
 
 		glClear(GL_COLOR_BUFFER_BIT);
+		glm::mat4 view = glm::mat4(1.0f);
+		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
+		glm::mat4 projection;
+		projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+		shaderProgram.setMat4("projection", projection);
+		shaderProgram.setMat4("view", view);
+
 		for (int i = 0; i < objs.size(); i++) {
 			shaderProgram.use();
 			Object& obj = objs[i];
@@ -130,9 +137,10 @@ int main() {
 				obj_2.totalForce -= gForce * dir;
 			}
 			obj.accelerate(deltatime);
-			glm::mat4 trans = glm::mat4(1.0f);
-			trans = glm::translate(trans, glm::vec3(obj.position, 0.0f));
-			shaderProgram.setMat4("transform", trans);
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(obj.position, 0.0f));
+			model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+			shaderProgram.setMat4("model", model);
 
 			obj.totalForce = glm::vec2(0.0f);
 		}
