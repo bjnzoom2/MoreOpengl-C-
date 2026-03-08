@@ -138,6 +138,7 @@
     <None Include="vertex.glsl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="camera.h" />
     <ClInclude Include="obj.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="vao.h" />
