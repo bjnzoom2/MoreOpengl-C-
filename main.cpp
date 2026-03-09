@@ -155,8 +155,8 @@ int main() {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0); */
 
-	Object obj1({ -0.5f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, 1e9, 0.125f);
-	Object obj2({ 0.5f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, 1e9, 0.125f);
+	Object obj1({ -0.5f, 0.0f, -0.5f }, { 0.1086f, 0.0f, -0.1086f }, 1e9, 0.125f);
+	Object obj2({ 0.5f, 0.0f, 0.5f }, { -0.1086f, 0.0f, 0.1086f }, 1e9, 0.125f);
 	objs.push_back(obj1);
 	objs.push_back(obj2);
 
@@ -189,7 +189,7 @@ int main() {
 			shaderProgram.setMat4("model", model);
 			obj.draw();
 
-			/*for (int j = i + 1; j < objs.size(); j++) {
+			for (int j = i + 1; j < objs.size(); j++) {
 				Object& obj_2 = objs[j];
 				float dist2 = glm::distance(obj.position, obj_2.position) * glm::distance(obj.position, obj_2.position);
 				float gForce = G_CONST * (obj.mass * obj_2.mass / dist2);
@@ -199,7 +199,7 @@ int main() {
 				obj_2.totalForce -= gForce * dir;
 			}
 			obj.accelerate(deltatime);
-			obj.totalForce = glm::vec3(0.0f);*/
+			obj.totalForce = glm::vec3(0.0f);
 		}
 
 		processInput(window, deltatime);
