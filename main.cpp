@@ -7,6 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "shader.h"
+#include "camera.h"
 #include "obj.h"
 
 const unsigned int WIDTH = 800;
@@ -14,6 +15,59 @@ const unsigned int HEIGHT = 800;
 const float G_CONST = 6.67430e-11;
 
 std::vector<Object> objs = {};
+Camera camera({ 0.0f, 0.0f, 3.0f });
+bool firstMouse = true;
+float lastX = 400, lastY = 300;
+
+void processInput(GLFWwindow* window, float deltatime)
+{
+	const float cameraSpeed = 2.0f * deltatime; // adjust accordingly
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, (int)true);
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		camera.cameraPos += cameraSpeed * camera.cameraFront;
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		camera.cameraPos -= cameraSpeed * camera.cameraFront;
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		camera.cameraPos -= glm::normalize(glm::cross(camera.cameraFront, camera.cameraUp)) * cameraSpeed;
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		camera.cameraPos += glm::normalize(glm::cross(camera.cameraFront, camera.cameraUp)) * cameraSpeed;
+}
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+	if (firstMouse)
+	{
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false;
+	}
+
+	float xoffset = xpos - lastX;
+	float yoffset = lastY - ypos;
+	lastX = xpos;
+	lastY = ypos;
+
+	float sensitivity = 0.1f;
+	xoffset *= sensitivity;
+	yoffset *= sensitivity;
+
+	camera.yaw += xoffset;
+	camera.pitch += yoffset;
+
+	if (camera.pitch > 89.0f)
+		camera.pitch = 89.0f;
+	if (camera.pitch < -89.0f)
+		camera.pitch = -89.0f;
+
+	glm::vec3 direction;
+	direction.x = cos(glm::radians(camera.yaw)) * cos(glm::radians(camera.pitch));
+	direction.y = sin(glm::radians(camera.pitch));
+	direction.z = sin(glm::radians(camera.yaw)) * cos(glm::radians(camera.pitch));
+	camera.cameraDir = direction;
+	camera.cameraFront = glm::normalize(camera.cameraDir);
+	camera.cameraRight = glm::normalize(glm::cross(camera.up, camera.cameraDir));
+	camera.cameraUp = glm::cross(camera.cameraDir, camera.cameraRight);
+}
 
 int main() {
 	glfwInit();
@@ -110,6 +164,9 @@ int main() {
 	float currentTime = glfwGetTime();
 	float previousTime = 0.0f;
 
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetCursorPosCallback(window, mouse_callback);
+
 	while (!glfwWindowShouldClose(window)) {
 		deltatime = currentTime - previousTime;
 		previousTime = currentTime;
@@ -117,22 +174,22 @@ int main() {
 
 		glEnable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		shaderProgram.use();
 		glm::mat4 view = glm::mat4(1.0f);
-		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
+		view = glm::lookAt(camera.cameraPos, camera.cameraPos + camera.cameraFront, camera.up);
 		glm::mat4 projection;
 		projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 		shaderProgram.setMat4("projection", projection);
 		shaderProgram.setMat4("view", view);
 
 		for (int i = 0; i < objs.size(); i++) {
-			shaderProgram.use();
 			Object& obj = objs[i];
 			glm::mat4 model = glm::mat4(1.0f);
 			model = glm::translate(model, obj.position);
 			shaderProgram.setMat4("model", model);
 			obj.draw();
 
-			for (int j = i + 1; j < objs.size(); j++) {
+			/*for (int j = i + 1; j < objs.size(); j++) {
 				Object& obj_2 = objs[j];
 				float dist2 = glm::distance(obj.position, obj_2.position) * glm::distance(obj.position, obj_2.position);
 				float gForce = G_CONST * (obj.mass * obj_2.mass / dist2);
@@ -142,8 +199,10 @@ int main() {
 				obj_2.totalForce -= gForce * dir;
 			}
 			obj.accelerate(deltatime);
-			obj.totalForce = glm::vec3(0.0f);
+			obj.totalForce = glm::vec3(0.0f);*/
 		}
+
+		processInput(window, deltatime);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
