@@ -9,6 +9,7 @@
 #include "shader.h"
 #include "camera.h"
 #include "obj.h"
+#include "light.h"
 
 const unsigned int WIDTH = 800;
 const unsigned int HEIGHT = 800;
@@ -107,9 +108,12 @@ int main() {
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);*/;
 	std::filesystem::path vertexPath{ R"(C:\Users\luken\source\repos\MoreOpengl C++\vertex.glsl)" };
+	std::filesystem::path lightVertexPath{ R"(C:\Users\luken\source\repos\MoreOpengl C++\lightVertex.glsl)" };
 	std::filesystem::path fragmentPath{ R"(C:\Users\luken\source\repos\MoreOpengl C++\fragment.glsl)" };
+	std::filesystem::path lightFragmentPath{ R"(C:\Users\luken\source\repos\MoreOpengl C++\lightFragment.glsl)" };
 
 	Shader shaderProgram(vertexPath.string().c_str(), fragmentPath.string().c_str());
+	Shader lightShaderProgram(lightVertexPath.string().c_str(), lightFragmentPath.string().c_str());
 
 	/*int res = 50;
 
@@ -160,6 +164,8 @@ int main() {
 	objs.push_back(obj1);
 	objs.push_back(obj2);
 
+	Light light({0.0f, 0.0f, 0.0f}, 0.25f);
+
 	float deltatime;
 	float currentTime = glfwGetTime();
 	float previousTime = 0.0f;
@@ -181,6 +187,9 @@ int main() {
 		projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 		shaderProgram.setMat4("projection", projection);
 		shaderProgram.setMat4("view", view);
+		shaderProgram.setVec3("color", { 0.0f, 1.0f, 1.0f });
+		shaderProgram.setVec3("lightColor", { 1.0f, 1.0f, 1.0f });
+		shaderProgram.setVec3("lightPos", light.position);
 
 		for (int i = 0; i < objs.size(); i++) {
 			Object& obj = objs[i];
@@ -199,8 +208,16 @@ int main() {
 				obj_2.totalForce -= gForce * dir;
 			}
 			obj.accelerate(deltatime);
-			obj.totalForce = glm::vec3(0.0f);
 		}
+
+		lightShaderProgram.use();
+		lightShaderProgram.setMat4("projection", projection);
+		lightShaderProgram.setMat4("view", view);
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, light.position);
+		lightShaderProgram.setMat4("model", model);
+
+		light.draw();
 
 		processInput(window, deltatime);
 
@@ -213,6 +230,7 @@ int main() {
 		glDeleteBuffers(1, &obj.Vao.vbo);
 	}
 	glDeleteProgram(shaderProgram.ID);
+	glDeleteProgram(lightShaderProgram.ID);
 	glfwTerminate();
 
 	return 0;

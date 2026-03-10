@@ -71,6 +71,9 @@ public:
     void setFloat(const std::string& name, float value) const {
         glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
     }
+    void setVec3(const std::string& name, glm::vec3 vec) const {
+        glUniform3f(glGetUniformLocation(ID, name.c_str()), vec.x, vec.y, vec.z);
+    }
     void setVec4(const std::string& name, glm::vec4 vec) const {
         glUniform4f(glGetUniformLocation(ID, name.c_str()), vec.x, vec.y, vec.z, vec.w);
     }

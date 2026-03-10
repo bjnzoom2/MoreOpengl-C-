@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Headers">
+      <UniqueIdentifier>{b4e6b0e6-ada1-4579-aeea-7d55f20ed430}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shaders">
+      <UniqueIdentifier>{0551f605-c7e5-4af1-99d1-b730052a4aed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -21,23 +27,37 @@
     <ClCompile Include="External\gladCompatibility\src\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="lightVAO.h">
+      <Filter>Source Files\Headers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="vertex.glsl" />
-    <None Include="fragment.glsl" />
+    <None Include="fragment.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="vertex.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="lightFragment.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="lightVertex.glsl" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="shader.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="camera.h">
+      <Filter>Source Files\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="obj.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="shader.h">
+      <Filter>Source Files\Headers</Filter>
     </ClInclude>
     <ClInclude Include="vao.h">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="obj.h">
+      <Filter>Source Files\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="light.h">
+      <Filter>Source Files\Headers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
