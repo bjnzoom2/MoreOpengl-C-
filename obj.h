@@ -26,8 +26,8 @@ public:
 	VAO Vao;
 
 	Object(glm::vec3 initPos, glm::vec3 vel, float _mass, float rad) : initPosition(initPos), position(initPos), velocity(vel), mass(_mass), radius(rad) {
-		int stacks = 20;
-		int sectors = 20;
+		int stacks = 40;
+		int sectors = 40;
 
 		// generate circumference points using integer steps
 		for (float i = 0.0f; i <= stacks; ++i) {

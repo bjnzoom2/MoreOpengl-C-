@@ -164,7 +164,7 @@ int main() {
 	objs.push_back(obj1);
 	objs.push_back(obj2);
 
-	Light light({0.0f, 0.0f, 0.0f}, 0.25f);
+	Light light({0.0f, 0.0f, 0.0f}, 0.2f);
 
 	float deltatime;
 	float currentTime = glfwGetTime();

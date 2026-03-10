@@ -8,7 +8,7 @@ uniform vec3 lightPos;
 uniform vec3 lightColor;
 uniform vec3 color;
 
-float ambientStrength = 0.5f;
+float ambientStrength = 0.25f;
 vec3 ambient = ambientStrength * lightColor;
 vec3 norm = normalize(normal);
 vec3 lightDir = normalize(lightPos - FragPos);
