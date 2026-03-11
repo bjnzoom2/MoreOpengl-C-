@@ -164,7 +164,7 @@ int main() {
 	objs.push_back(obj1);
 	objs.push_back(obj2);
 
-	Light light({0.0f, 0.0f, 0.0f}, 0.2f);
+	Light light({0.0f, 0.0f, 0.0f}, 0.1f);
 
 	float deltatime;
 	float currentTime = glfwGetTime();
@@ -190,6 +190,7 @@ int main() {
 		shaderProgram.setVec3("color", { 0.0f, 1.0f, 1.0f });
 		shaderProgram.setVec3("lightColor", { 1.0f, 1.0f, 1.0f });
 		shaderProgram.setVec3("lightPos", light.position);
+		shaderProgram.setVec3("viewPos", camera.cameraPos);
 
 		for (int i = 0; i < objs.size(); i++) {
 			Object& obj = objs[i];
