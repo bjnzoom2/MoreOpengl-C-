@@ -87,26 +87,6 @@ int main() {
 	gladLoadGL();
 	glViewport(0, 0, WIDTH, HEIGHT);
 
-	/*unsigned int vertexShader;
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
-	glCompileShader(vertexShader);
-
-	unsigned int fragmentShader;
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
-	glCompileShader(fragmentShader);
-
-	unsigned int shaderProgram;
-	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-
-	unsigned int color = glGetUniformLocation(shaderProgram, "color");
-
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);*/;
 	std::filesystem::path vertexPath{ R"(C:\Users\luken\source\repos\MoreOpengl C++\vertex.glsl)" };
 	std::filesystem::path lightVertexPath{ R"(C:\Users\luken\source\repos\MoreOpengl C++\lightVertex.glsl)" };
 	std::filesystem::path fragmentPath{ R"(C:\Users\luken\source\repos\MoreOpengl C++\fragment.glsl)" };
@@ -115,56 +95,12 @@ int main() {
 	Shader shaderProgram(vertexPath.string().c_str(), fragmentPath.string().c_str());
 	Shader lightShaderProgram(lightVertexPath.string().c_str(), lightFragmentPath.string().c_str());
 
-	/*int res = 50;
-
-	std::vector<float> vertices = {};
-	glm::vec2 position(0.0f, 0.875f);
-	glm::vec2 velocity(0.0f, 0.0f);
-	glm::vec2 acceleration(0.0f, 0.0f);
-
-	float rad = 0.125f;
-	vertices.push_back(position.x);
-	vertices.push_back(position.y);
-	vertices.push_back(0.0f);
-
-	vertices.push_back(1.0f);	
-	vertices.push_back(1.0f);
-	vertices.push_back(1.0f);
-	for (int i = 0; i <= res; i++) {
-		float angle = 2.0f * 3.14159265359 * (static_cast<float>(i) / res);
-		float x = position.x + cos(angle) * rad;
-		float y = position.y + sin(angle) * rad;
-		vertices.push_back(x);
-		vertices.push_back(y);
-		vertices.push_back(0.0f);
-
-		vertices.push_back(1.0f);
-		vertices.push_back(1.0f);	
-		vertices.push_back(1.0f);
-	}
-
-	unsigned int VAO, VBO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0); */
-
 	Object obj1({ -0.5f, 0.0f, -0.5f }, { 0.1086f, 0.0f, -0.1086f }, 1e9, 0.125f);
 	Object obj2({ 0.5f, 0.0f, 0.5f }, { -0.1086f, 0.0f, 0.1086f }, 1e9, 0.125f);
 	objs.push_back(obj1);
 	objs.push_back(obj2);
 
-	Light light({0.0f, 0.0f, 0.0f}, 0.1f);
+	Light light({0.0f, 0.0f, 0.0f}, 0.075f);
 
 	float deltatime;
 	float currentTime = glfwGetTime();
