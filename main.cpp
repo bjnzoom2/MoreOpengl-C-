@@ -95,8 +95,8 @@ int main() {
 	Shader shaderProgram(vertexPath.string().c_str(), fragmentPath.string().c_str());
 	Shader lightShaderProgram(lightVertexPath.string().c_str(), lightFragmentPath.string().c_str());
 
-	Object obj1({ -0.5f, 0.0f, -0.5f }, { 0.1086f, 0.0f, -0.1086f }, 1e9, 0.125f);
-	Object obj2({ 0.5f, 0.0f, 0.5f }, { -0.1086f, 0.0f, 0.1086f }, 1e9, 0.125f);
+	Object obj1({ -0.5f, 0.0f, -0.5f }, { 0.1086f, 0.0f, -0.1086f }, 1e9, 0.125f, { 0.0f, 1.0f, 1.0f });
+	Object obj2({ 0.5f, 0.0f, 0.5f }, { -0.1086f, 0.0f, 0.1086f }, 1e9, 0.125f, { 1.0f, 1.0f, 0.0f });
 	objs.push_back(obj1);
 	objs.push_back(obj2);
 
@@ -123,7 +123,6 @@ int main() {
 		projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 		shaderProgram.setMat4("projection", projection);
 		shaderProgram.setMat4("view", view);
-		shaderProgram.setVec3("color", { 0.0f, 1.0f, 1.0f });
 		shaderProgram.setVec3("lightColor", { 1.0f, 1.0f, 1.0f });
 		shaderProgram.setVec3("lightPos", light.position);
 		shaderProgram.setVec3("viewPos", camera.cameraPos);
@@ -131,6 +130,7 @@ int main() {
 		for (int i = 0; i < objs.size(); i++) {
 			Object& obj = objs[i];
 			glm::mat4 model = glm::mat4(1.0f);
+			shaderProgram.setVec3("color", obj.color);
 			model = glm::translate(model, obj.position);
 			shaderProgram.setMat4("model", model);
 			obj.draw();

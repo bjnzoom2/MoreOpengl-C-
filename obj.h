@@ -16,16 +16,16 @@ private:
 		return glm::vec3(x, y, z);
 	};
 public:
-	glm::vec3 initPosition = {};
 	glm::vec3 position = {};
 	glm::vec3 velocity = {};
 	float mass = 1;
 	float radius = 0.125f;
 	glm::vec3 totalForce = {};
+	glm::vec3 color = glm::vec3(1.0f);
 
 	VAO Vao;
 
-	Object(glm::vec3 initPos, glm::vec3 vel, float _mass, float rad) : initPosition(initPos), position(initPos), velocity(vel), mass(_mass), radius(rad) {
+	Object(glm::vec3 initPos, glm::vec3 vel, float _mass, float rad, glm::vec3 col) : position(initPos), velocity(vel), mass(_mass), radius(rad), color(col) {
 		int stacks = 30;
 		int sectors = 30;
 
