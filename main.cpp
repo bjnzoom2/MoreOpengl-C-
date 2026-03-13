@@ -91,8 +91,8 @@ int main() {
 
 	Shader shaderProgram(vertexPath.string().c_str(), fragmentPath.string().c_str());
 
-	Object obj1({ -0.5f, 0.0f, -0.5f }, { 0.1086f, 0.0f, -0.1086f }, 1e9, 0.125f, { 0.0f, 1.0f, 1.0f }, false);
-	Object obj2({ 0.5f, 0.0f, 0.5f }, { -0.1086f, 0.0f, 0.1086f }, 1e9, 0.125f, { 1.0f, 1.0f, 1.0f }, true);
+	Object obj1({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, 1e10, 0.25f, { 1.0f, 1.0f, 1.0f }, true);
+	Object obj2({ 2.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.57768f }, 1e6, 0.125f, { 0.0f, 1.0f, 1.0f }, false);
 	objs.push_back(obj1);
 	objs.push_back(obj2);
 
