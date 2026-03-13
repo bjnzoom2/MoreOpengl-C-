@@ -9,7 +9,6 @@
 #include "shader.h"
 #include "camera.h"
 #include "obj.h"
-#include "light.h"
 
 const unsigned int WIDTH = 800;
 const unsigned int HEIGHT = 800;
@@ -88,19 +87,16 @@ int main() {
 	glViewport(0, 0, WIDTH, HEIGHT);
 
 	std::filesystem::path vertexPath{ R"(C:\Users\luken\source\repos\MoreOpengl C++\vertex.glsl)" };
-	std::filesystem::path lightVertexPath{ R"(C:\Users\luken\source\repos\MoreOpengl C++\lightVertex.glsl)" };
 	std::filesystem::path fragmentPath{ R"(C:\Users\luken\source\repos\MoreOpengl C++\fragment.glsl)" };
-	std::filesystem::path lightFragmentPath{ R"(C:\Users\luken\source\repos\MoreOpengl C++\lightFragment.glsl)" };
 
 	Shader shaderProgram(vertexPath.string().c_str(), fragmentPath.string().c_str());
-	Shader lightShaderProgram(lightVertexPath.string().c_str(), lightFragmentPath.string().c_str());
 
-	Object obj1({ -0.5f, 0.0f, -0.5f }, { 0.1086f, 0.0f, -0.1086f }, 1e9, 0.125f, { 0.0f, 1.0f, 1.0f });
-	Object obj2({ 0.5f, 0.0f, 0.5f }, { -0.1086f, 0.0f, 0.1086f }, 1e9, 0.125f, { 1.0f, 1.0f, 0.0f });
+	Object obj1({ -0.5f, 0.0f, -0.5f }, { 0.1086f, 0.0f, -0.1086f }, 1e9, 0.125f, { 0.0f, 1.0f, 1.0f }, false);
+	Object obj2({ 0.5f, 0.0f, 0.5f }, { -0.1086f, 0.0f, 0.1086f }, 1e9, 0.125f, { 1.0f, 1.0f, 1.0f }, true);
 	objs.push_back(obj1);
 	objs.push_back(obj2);
 
-	Light light({0.0f, 0.0f, 0.0f}, 0.075f);
+	//Light light({0.0f, 0.0f, 0.0f}, 0.075f);
 
 	float deltatime;
 	float currentTime = glfwGetTime();
@@ -123,14 +119,24 @@ int main() {
 		projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 		shaderProgram.setMat4("projection", projection);
 		shaderProgram.setMat4("view", view);
-		shaderProgram.setVec3("lightColor", { 1.0f, 1.0f, 1.0f });
+		/*shaderProgram.setVec3("lightColor", {1.0f, 1.0f, 1.0f});
 		shaderProgram.setVec3("lightPos", light.position);
 		shaderProgram.setVec3("viewPos", camera.cameraPos);
+		shaderProgram.setFloat("ambientStrength", 0.25f);*/
+		shaderProgram.setFloat("specularStrength", 0.75f);
 
 		for (int i = 0; i < objs.size(); i++) {
 			Object& obj = objs[i];
 			glm::mat4 model = glm::mat4(1.0f);
 			shaderProgram.setVec3("color", obj.color);
+			if (obj.isLight) {
+				shaderProgram.setVec3("lightColor", obj.color);
+				shaderProgram.setFloat("ambientStrength", 1.0f);
+				shaderProgram.setVec3("lightPos", obj.position);
+			}
+			else {
+				shaderProgram.setFloat("ambientStrength", 0.25f);
+			}
 			model = glm::translate(model, obj.position);
 			shaderProgram.setMat4("model", model);
 			obj.draw();
@@ -147,14 +153,14 @@ int main() {
 			obj.accelerate(deltatime);
 		}
 
-		lightShaderProgram.use();
+		/*lightShaderProgram.use();
 		lightShaderProgram.setMat4("projection", projection);
 		lightShaderProgram.setMat4("view", view);
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, light.position);
 		lightShaderProgram.setMat4("model", model);
 
-		light.draw();
+		light.draw();*/
 
 		processInput(window, deltatime);
 
@@ -167,7 +173,6 @@ int main() {
 		glDeleteBuffers(1, &obj.Vao.vbo);
 	}
 	glDeleteProgram(shaderProgram.ID);
-	glDeleteProgram(lightShaderProgram.ID);
 	glfwTerminate();
 
 	return 0;

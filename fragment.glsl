@@ -8,9 +8,9 @@ uniform vec3 lightPos;
 uniform vec3 lightColor;
 uniform vec3 color;
 uniform vec3 viewPos;
+uniform float ambientStrength;
+uniform float specularStrength;
 
-float ambientStrength = 0.25f;
-float specularStrength = 0.75f;
 vec3 ambient = ambientStrength * lightColor;
 vec3 norm = normalize(normal);
 vec3 lightDir = normalize(lightPos - FragPos);

@@ -23,9 +23,11 @@ public:
 	glm::vec3 totalForce = {};
 	glm::vec3 color = glm::vec3(1.0f);
 
+	bool isLight = false;
+
 	VAO Vao;
 
-	Object(glm::vec3 initPos, glm::vec3 vel, float _mass, float rad, glm::vec3 col) : position(initPos), velocity(vel), mass(_mass), radius(rad), color(col) {
+	Object(glm::vec3 initPos, glm::vec3 vel, float _mass, float rad, glm::vec3 col, bool light) : position(initPos), velocity(vel), mass(_mass), radius(rad), color(col), isLight(light) {
 		int stacks = 30;
 		int sectors = 30;
 

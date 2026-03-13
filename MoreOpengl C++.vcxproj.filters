@@ -27,9 +27,6 @@
     <ClCompile Include="External\gladCompatibility\src\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="lightVAO.h">
-      <Filter>Source Files\Headers</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment.glsl">
@@ -38,10 +35,6 @@
     <None Include="vertex.glsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="lightFragment.glsl">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="lightVertex.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h">
@@ -54,9 +47,6 @@
       <Filter>Source Files\Headers</Filter>
     </ClInclude>
     <ClInclude Include="obj.h">
-      <Filter>Source Files\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="light.h">
       <Filter>Source Files\Headers</Filter>
     </ClInclude>
   </ItemGroup>

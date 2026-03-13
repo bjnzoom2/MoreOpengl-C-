@@ -131,18 +131,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="External\gladCompatibility\src\glad.c" />
-    <ClCompile Include="lightVAO.h" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment.glsl" />
-    <None Include="lightFragment.glsl" />
-    <None Include="lightVertex.glsl" />
     <None Include="vertex.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h" />
-    <ClInclude Include="light.h" />
     <ClInclude Include="obj.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="vao.h" />
