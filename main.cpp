@@ -94,9 +94,11 @@ int main() {
 	Object obj1({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, 1e10, 0.25f, { 1.0f, 1.0f, 1.0f }, true);
 	Object obj2({ 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.817f }, 1e6, 0.125f, { 0.0f, 1.0f, 1.0f }, false);
 	Object obj3({ 2.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.57768f }, 1e6, 0.125f, { 1.0f, 1.0f, 0.0f }, false);
+	Object obj4({ 3.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.4717f }, 1e6, 0.125f, { 1.0f, 0.0f, 0.0f }, false);
 	objs.push_back(obj1);
 	objs.push_back(obj2);
 	objs.push_back(obj3);
+	objs.push_back(obj4);
 
 	//Light light({0.0f, 0.0f, 0.0f}, 0.075f);
 
