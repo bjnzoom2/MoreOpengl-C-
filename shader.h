@@ -11,6 +11,7 @@
 #include <sstream>
 #include <iostream>
 
+#include "obj.h"
 
 class Shader {
 public:
@@ -79,6 +80,12 @@ public:
     }
     void setMat4(const std::string& name, glm::mat4 mat) const {
         glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(mat));
+    }
+    void setMaterial(const std::string& name, Material material) const {
+        setVec3(name + ".ambient", material.ambient);
+        setVec3(name + ".diffuse", material.diffuse);
+        setVec3(name + ".specular", material.specular);
+        setFloat(name + ".shininess", material.shininess);
     }
 };
 

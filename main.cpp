@@ -90,11 +90,11 @@ int main() {
 	std::filesystem::path fragmentPath{ R"(C:\Users\luken\source\repos\MoreOpengl C++\fragment.glsl)" };
 
 	Shader shaderProgram(vertexPath.string().c_str(), fragmentPath.string().c_str());
-
-	Object obj1({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, 1e10, 0.25f, { 1.0f, 1.0f, 1.0f }, true);
-	Object obj2({ 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.817f }, 1e6, 0.125f, { 0.0f, 1.0f, 1.0f }, false);
-	Object obj3({ 2.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.57768f }, 1e6, 0.125f, { 1.0f, 1.0f, 0.0f }, false);
-	Object obj4({ 3.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.4717f }, 1e6, 0.125f, { 1.0f, 0.0f, 0.0f }, false);
+	
+	Object obj1({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, 1e10, 0.25f, Material(), true);
+	Object obj2({ 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.817f }, 1e6, 0.125f, Material(glm::vec3(0.0f, 1.0f, 1.0f) * 0.25f, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(0.5f), 8.0f), false);
+	Object obj3({ 2.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.57768f }, 1e6, 0.125f, Material(glm::vec3(1.0f, 1.0f, 0.0f) * 0.25f, glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(0.5f), 8.0f), false);
+	Object obj4({ 3.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.4717f }, 1e6, 0.125f, Material(glm::vec3(1.0f, 0.0f, 0.0f) * 0.25f, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.5f), 8.0f), false);
 	objs.push_back(obj1);
 	objs.push_back(obj2);
 	objs.push_back(obj3);
@@ -126,21 +126,18 @@ int main() {
 		/*shaderProgram.setVec3("lightColor", {1.0f, 1.0f, 1.0f});
 		shaderProgram.setVec3("lightPos", light.position);
 		shaderProgram.setVec3("viewPos", camera.cameraPos);
-		shaderProgram.setFloat("ambientStrength", 0.25f);*/
-		shaderProgram.setFloat("specularStrength", 0.75f);
+		shaderProgram.setFloat("ambientStrength", 0.25f);
+		shaderProgram.setFloat("specularStrength", 0.75f);*/
 
 		for (int i = 0; i < objs.size(); i++) {
 			Object& obj = objs[i];
 			glm::mat4 model = glm::mat4(1.0f);
-			shaderProgram.setVec3("color", obj.color);
+			shaderProgram.setMaterial("material", obj.material);
 			if (obj.isLight) {
-				shaderProgram.setVec3("lightColor", obj.color);
-				shaderProgram.setFloat("ambientStrength", 1.0f);
+				shaderProgram.setVec3("lightColor", obj.material.diffuse);
 				shaderProgram.setVec3("lightPos", obj.position);
 			}
-			else {
-				shaderProgram.setFloat("ambientStrength", 0.25f);
-			}
+
 			model = glm::translate(model, obj.position);
 			shaderProgram.setMat4("model", model);
 			obj.draw();

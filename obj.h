@@ -5,6 +5,15 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "vao.h"
 
+struct Material {
+	glm::vec3 ambient;
+	glm::vec3 diffuse;
+	glm::vec3 specular;
+	float shininess;
+
+	Material(glm::vec3 amb = glm::vec3(1.0f), glm::vec3 dif = glm::vec3(1.0f), glm::vec3 spec = glm::vec3(1.0f), float shine = 0.0f) : ambient(amb), diffuse(dif), specular(spec), shininess(shine) {}
+};
+
 class Object {
 private:
 	std::vector<float> vertices;
@@ -21,15 +30,15 @@ public:
 	float mass = 1;
 	float radius = 0.125f;
 	glm::vec3 totalForce = {};
-	glm::vec3 color = glm::vec3(1.0f);
+	Material material;
 
 	bool isLight = false;
 
 	VAO Vao;
 
-	Object(glm::vec3 initPos, glm::vec3 vel, float _mass, float rad, glm::vec3 col, bool light) : position(initPos), velocity(vel), mass(_mass), radius(rad), color(col), isLight(light) {
-		int stacks = 30;
-		int sectors = 30;
+	Object(glm::vec3 initPos, glm::vec3 vel, float _mass, float rad, Material mat, bool light) : position(initPos), velocity(vel), mass(_mass), radius(rad), material(mat), isLight(light) {
+		int stacks = 50;
+		int sectors = 50;
 
 		// generate circumference points using integer steps
 		for (float i = 0.0f; i <= stacks; ++i) {
