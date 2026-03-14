@@ -52,19 +52,20 @@ public:
 				glm::vec3 v3 = sphericalToCartesian(this->radius, theta2, phi1);
 				glm::vec3 v4 = sphericalToCartesian(this->radius, theta2, phi2);
 
-				glm::vec3 n1 = glm::normalize(glm::cross(v2 - v1, v3 - v1));
+				glm::vec3 n1 = glm::normalize(v1);
+				glm::vec3 n2 = glm::normalize(v2);
+				glm::vec3 n3 = glm::normalize(v3);
+				glm::vec3 n4 = glm::normalize(v4);
 
 				// Triangle 1: v1-v2-v3
 				vertices.insert(vertices.end(), { v1.x, v1.y, v1.z, n1.x, n1.y, n1.z }); //      /|
-				vertices.insert(vertices.end(), { v2.x, v2.y, v2.z, n1.x, n1.y, n1.z }); //     / |
-				vertices.insert(vertices.end(), { v3.x, v3.y, v3.z, n1.x, n1.y, n1.z }); //    /__|
-
-				glm::vec3 n2 = glm::normalize(glm::cross(v4 - v2, v3 - v2));
+				vertices.insert(vertices.end(), { v2.x, v2.y, v2.z, n2.x, n2.y, n2.z }); //     / |
+				vertices.insert(vertices.end(), { v3.x, v3.y, v3.z, n3.x, n3.y, n3.z }); //    /__|
 
 				// Triangle 2: v2-v4-v3
 				vertices.insert(vertices.end(), { v2.x, v2.y, v2.z, n2.x, n2.y, n2.z });
-				vertices.insert(vertices.end(), { v4.x, v4.y, v4.z, n2.x, n2.y, n2.z });
-				vertices.insert(vertices.end(), { v3.x, v3.y, v3.z, n2.x, n2.y, n2.z });
+				vertices.insert(vertices.end(), { v4.x, v4.y, v4.z, n4.x, n4.y, n4.z });
+				vertices.insert(vertices.end(), { v3.x, v3.y, v3.z, n3.x, n3.y, n3.z });
 			}
 		}
 
