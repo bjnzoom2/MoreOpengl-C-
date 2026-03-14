@@ -92,9 +92,9 @@ int main() {
 	Shader shaderProgram(vertexPath.string().c_str(), fragmentPath.string().c_str());
 	
 	Object obj1({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, 1e10, 0.25f, Material(), true);
-	Object obj2({ 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.817f }, 1e6, 0.125f, Material(glm::vec3(0.0f, 1.0f, 1.0f) * 0.25f, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(0.5f), 8.0f), false);
-	Object obj3({ 2.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.57768f }, 1e6, 0.125f, Material(glm::vec3(1.0f, 1.0f, 0.0f) * 0.25f, glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(0.5f), 8.0f), false);
-	Object obj4({ 3.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.4717f }, 1e6, 0.125f, Material(glm::vec3(1.0f, 0.0f, 0.0f) * 0.25f, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.5f), 8.0f), false);
+	Object obj2({ 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.817f }, 1e6, 0.125f, Material(glm::vec3(0.0f, 1.0f, 1.0f) * 0.25f, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(0.5f), 4.0f), false);
+	Object obj3({ 2.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.57768f }, 1e6, 0.125f, Material(glm::vec3(1.0f, 1.0f, 0.0f) * 0.25f, glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(0.5f), 4.0f), false);
+	Object obj4({ 3.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.4717f }, 1e6, 0.125f, Material(glm::vec3(1.0f, 0.0f, 0.0f) * 0.25f, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.5f), 4.0f), false);
 	objs.push_back(obj1);
 	objs.push_back(obj2);
 	objs.push_back(obj3);
