@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <stb_image.h>
 
 #include "shader.h"
 #include "camera.h"
@@ -99,6 +100,10 @@ int main() {
 	objs.push_back(obj2);
 	objs.push_back(obj3);
 	objs.push_back(obj4);
+
+	std::filesystem::path texturePath{ R"(C:\Users\luken\source\repos\MoreOpengl C++\Textures\Uranus.png)" };
+	int width, height, nrChannels;
+	unsigned char* data = stbi_load(texturePath.string().c_str(), &width, &height, &nrChannels, 0);
 
 	//Light light({0.0f, 0.0f, 0.0f}, 0.075f);
 

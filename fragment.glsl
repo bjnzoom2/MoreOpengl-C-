@@ -9,7 +9,10 @@ struct Material {
 
 out vec4 FragColor;
 in vec3 normal;
-in vec3 FragPos;  
+in vec3 FragPos;
+
+in vec2 TexCoord;
+uniform sampler2D ourTexture;
 
 uniform vec3 lightPos;  
 uniform vec3 lightColor;
@@ -35,5 +38,5 @@ void main() {
     specular *= (diff > 0.0 ? 1.0 : 0.0);
         
     vec3 result = ambient + diffuse + specular;
-    FragColor = vec4(result, 1.0);
+    FragColor = vec4(result, 1.0) * texture(ourTexture, TexCoord);
 }

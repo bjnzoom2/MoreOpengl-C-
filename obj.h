@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "vao.h"
+#include "texture.h"
 
 struct Material {
 	glm::vec3 ambient;
@@ -44,9 +45,17 @@ public:
 		for (float i = 0.0f; i <= stacks; ++i) {
 			float theta1 = (i / stacks) * glm::pi<float>();
 			float theta2 = (i + 1) / stacks * glm::pi<float>();
+
+			float v1_coord = (float)i / stacks;
+			float v2_coord = (float)(i + 1) / stacks;
+
 			for (float j = 0.0f; j < sectors; ++j) {
 				float phi1 = j / sectors * 2 * glm::pi<float>();
 				float phi2 = (j + 1) / sectors * 2 * glm::pi<float>();
+
+				float u1_coord = (float)j / sectors;
+				float u2_coord = (float)(j + 1) / sectors;
+
 				glm::vec3 v1 = sphericalToCartesian(this->radius, theta1, phi1);
 				glm::vec3 v2 = sphericalToCartesian(this->radius, theta1, phi2);
 				glm::vec3 v3 = sphericalToCartesian(this->radius, theta2, phi1);
@@ -58,14 +67,14 @@ public:
 				glm::vec3 n4 = glm::normalize(v4);
 
 				// Triangle 1: v1-v2-v3
-				vertices.insert(vertices.end(), { v1.x, v1.y, v1.z, n1.x, n1.y, n1.z }); //      /|
-				vertices.insert(vertices.end(), { v2.x, v2.y, v2.z, n2.x, n2.y, n2.z }); //     / |
-				vertices.insert(vertices.end(), { v3.x, v3.y, v3.z, n3.x, n3.y, n3.z }); //    /__|
+				vertices.insert(vertices.end(), { v1.x, v1.y, v1.z, n1.x, n1.y, n1.z, u1_coord, v1_coord }); //      /|
+				vertices.insert(vertices.end(), { v2.x, v2.y, v2.z, n2.x, n2.y, n2.z, u2_coord, v1_coord }); //     / |
+				vertices.insert(vertices.end(), { v3.x, v3.y, v3.z, n3.x, n3.y, n3.z, u1_coord, v2_coord }); //    /__|
 
 				// Triangle 2: v2-v4-v3
-				vertices.insert(vertices.end(), { v2.x, v2.y, v2.z, n2.x, n2.y, n2.z });
-				vertices.insert(vertices.end(), { v4.x, v4.y, v4.z, n4.x, n4.y, n4.z });
-				vertices.insert(vertices.end(), { v3.x, v3.y, v3.z, n3.x, n3.y, n3.z });
+				vertices.insert(vertices.end(), { v2.x, v2.y, v2.z, n2.x, n2.y, n2.z, u2_coord, v1_coord });
+				vertices.insert(vertices.end(), { v4.x, v4.y, v4.z, n4.x, n4.y, n4.z, u2_coord, v2_coord });
+				vertices.insert(vertices.end(), { v3.x, v3.y, v3.z, n3.x, n3.y, n3.z, u1_coord, v2_coord });
 			}
 		}
 
