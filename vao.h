@@ -1,14 +1,17 @@
 #pragma once
 #include <vector>
 #include <glad/glad.h>
+#include "texture.h"
 
 class VAO {
 private:
 	std::vector<float> vertices;
 public:
 	unsigned int vao, vbo;
-	VAO() : vertices(), vao(0), vbo(0) {}
-	VAO(std::vector<float> vert) : vertices(vert) {
+	unsigned char* data;
+	Texture texture;
+	VAO() : vertices(), vao(0), vbo(0), data(nullptr) {}
+	VAO(std::vector<float> vert, unsigned char* _data, int width, int height) : vertices(vert), data(_data) {
 		glGenVertexArrays(1, &vao);
 		glGenBuffers(1, &vbo);
 
@@ -25,9 +28,13 @@ public:
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
+
+		Texture Texture(data, width, height);
+		texture = Texture;
 	}
 
 	void bindVAO() {
+		glBindTexture(GL_TEXTURE_2D, texture.texture);
 		glBindVertexArray(vao);
 	}
 };

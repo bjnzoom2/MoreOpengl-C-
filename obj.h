@@ -4,7 +4,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "vao.h"
-#include "texture.h"
 
 struct Material {
 	glm::vec3 ambient;
@@ -37,7 +36,8 @@ public:
 
 	VAO Vao;
 
-	Object(glm::vec3 initPos, glm::vec3 vel, float _mass, float rad, Material mat, bool light) : position(initPos), velocity(vel), mass(_mass), radius(rad), material(mat), isLight(light) {
+	Object(glm::vec3 initPos, glm::vec3 vel, float _mass, float rad, Material mat, bool light,
+		unsigned char* data, int texWidth, int texHeight) : position(initPos), velocity(vel), mass(_mass), radius(rad), material(mat), isLight(light) {
 		int stacks = 50;
 		int sectors = 50;
 
@@ -78,7 +78,7 @@ public:
 			}
 		}
 
-		VAO vao(vertices);
+		VAO vao(vertices, data, texWidth, texHeight);
 		Vao = vao;
 	}
 
