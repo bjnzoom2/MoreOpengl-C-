@@ -92,11 +92,14 @@ int main() {
 
 	Shader shaderProgram(vertexPath.string().c_str(), fragmentPath.string().c_str());
 
-	std::filesystem::path texturePath{ R"(C:\Users\luken\source\repos\MoreOpengl C++\Textures\Uranus.png)" };
+	std::filesystem::path blankTexturePath{ R"(C:\Users\luken\source\repos\MoreOpengl C++\Textures\white.png)" };
+	std::filesystem::path texturePath{ R"(C:\Users\luken\source\repos\MoreOpengl C++\Textures\venus.png)" };
+	int bWidth, bHeight, bNrChannels;
+	unsigned char* blankData = stbi_load(blankTexturePath.string().c_str(), &bWidth, &bHeight, &bNrChannels, 0);
 	int width, height, nrChannels;
 	unsigned char* data = stbi_load(texturePath.string().c_str(), &width, &height, &nrChannels, 0);
 	
-	Object obj1({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, 1e10, 0.25f, Material(), true, data, width, height, nrChannels);
+	Object obj1({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, 1e10, 0.25f, Material(), true, blankData, bWidth, bHeight, bNrChannels);
 	Object obj2({ 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.817f }, 1e6, 0.125f, Material(glm::vec3(0.0f, 1.0f, 1.0f) * 0.25f, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(0.5f), 4.0f), false, data, width, height, nrChannels);
 	Object obj3({ 2.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.57768f }, 1e6, 0.125f, Material(glm::vec3(1.0f, 1.0f, 0.0f) * 0.25f, glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(0.5f), 4.0f), false, data, width, height, nrChannels);
 	Object obj4({ 3.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.4717f }, 1e6, 0.125f, Material(glm::vec3(1.0f, 0.0f, 0.0f) * 0.25f, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.5f), 4.0f), false, data, width, height, nrChannels);
@@ -105,6 +108,7 @@ int main() {
 	objs.push_back(obj3);
 	objs.push_back(obj4);
 
+	if (blankData) stbi_image_free(blankData);
 	if (data) stbi_image_free(data);
 
 	//Light light({0.0f, 0.0f, 0.0f}, 0.075f);
