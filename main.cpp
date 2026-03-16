@@ -96,10 +96,10 @@ int main() {
 	int width, height, nrChannels;
 	unsigned char* data = stbi_load(texturePath.string().c_str(), &width, &height, &nrChannels, 0);
 	
-	Object obj1({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, 1e10, 0.25f, Material(), true, data, width, height);
-	Object obj2({ 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.817f }, 1e6, 0.125f, Material(glm::vec3(0.0f, 1.0f, 1.0f) * 0.25f, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(0.5f), 4.0f), false, data, width, height);
-	Object obj3({ 2.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.57768f }, 1e6, 0.125f, Material(glm::vec3(1.0f, 1.0f, 0.0f) * 0.25f, glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(0.5f), 4.0f), false, data, width, height);
-	Object obj4({ 3.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.4717f }, 1e6, 0.125f, Material(glm::vec3(1.0f, 0.0f, 0.0f) * 0.25f, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.5f), 4.0f), false, data, width, height);
+	Object obj1({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, 1e10, 0.25f, Material(), true, data, width, height, nrChannels);
+	Object obj2({ 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.817f }, 1e6, 0.125f, Material(glm::vec3(0.0f, 1.0f, 1.0f) * 0.25f, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(0.5f), 4.0f), false, data, width, height, nrChannels);
+	Object obj3({ 2.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.57768f }, 1e6, 0.125f, Material(glm::vec3(1.0f, 1.0f, 0.0f) * 0.25f, glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(0.5f), 4.0f), false, data, width, height, nrChannels);
+	Object obj4({ 3.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.4717f }, 1e6, 0.125f, Material(glm::vec3(1.0f, 0.0f, 0.0f) * 0.25f, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.5f), 4.0f), false, data, width, height, nrChannels);
 	objs.push_back(obj1);
 	objs.push_back(obj2);
 	objs.push_back(obj3);
@@ -130,11 +130,6 @@ int main() {
 		projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 		shaderProgram.setMat4("projection", projection);
 		shaderProgram.setMat4("view", view);
-		/*shaderProgram.setVec3("lightColor", {1.0f, 1.0f, 1.0f});
-		shaderProgram.setVec3("lightPos", light.position);
-		shaderProgram.setVec3("viewPos", camera.cameraPos);
-		shaderProgram.setFloat("ambientStrength", 0.25f);
-		shaderProgram.setFloat("specularStrength", 0.75f);*/
 
 		for (int i = 0; i < objs.size(); i++) {
 			Object& obj = objs[i];

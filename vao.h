@@ -11,7 +11,7 @@ public:
 	unsigned char* data;
 	Texture texture;
 	VAO() : vertices(), vao(0), vbo(0), data(nullptr) {}
-	VAO(std::vector<float> vert, unsigned char* _data, int width, int height) : vertices(vert), data(_data) {
+	VAO(std::vector<float> vert, unsigned char* _data, int width, int height, int nrChannels) : vertices(vert), data(_data) {
 		glGenVertexArrays(1, &vao);
 		glGenBuffers(1, &vbo);
 
@@ -29,7 +29,7 @@ public:
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
 
-		Texture Texture(data, width, height);
+		Texture Texture(data, width, height, nrChannels);
 		texture = Texture;
 	}
 

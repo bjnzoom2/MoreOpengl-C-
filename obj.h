@@ -37,7 +37,7 @@ public:
 	VAO Vao;
 
 	Object(glm::vec3 initPos, glm::vec3 vel, float _mass, float rad, Material mat, bool light,
-		unsigned char* data, int texWidth, int texHeight) : position(initPos), velocity(vel), mass(_mass), radius(rad), material(mat), isLight(light) {
+		unsigned char* data, int texWidth, int texHeight, int nrChannels) : position(initPos), velocity(vel), mass(_mass), radius(rad), material(mat), isLight(light) {
 		int stacks = 50;
 		int sectors = 50;
 
@@ -78,7 +78,7 @@ public:
 			}
 		}
 
-		VAO vao(vertices, data, texWidth, texHeight);
+		VAO vao(vertices, data, texWidth, texHeight, nrChannels);
 		Vao = vao;
 	}
 
