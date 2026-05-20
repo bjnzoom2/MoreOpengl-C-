@@ -27,6 +27,8 @@ private:
 public:
 	glm::vec3 position = {};
 	glm::vec3 velocity = {};
+	glm::vec3 halfVelocity = {};
+	glm::vec3 acceleration = {};
 	float mass = 1;
 	float radius = 0.125f;
 	glm::vec3 totalForce = {};
@@ -87,11 +89,19 @@ public:
 		glDrawArrays(GL_TRIANGLES, 0, vertices.size() / 6);
 	}
 
-	void accelerate(float deltatime) {
-		glm::vec3 accel = totalForce / mass;
-		velocity += accel * deltatime;
-		position += velocity * deltatime;
+	void updatePos(float deltatime) {
+		position += (velocity * deltatime) + (0.5f * acceleration * (deltatime * deltatime));
+	}
 
-		totalForce = glm::vec3(0.0f);
+	void updateHalfVelo(float deltatime) {
+		halfVelocity = velocity + 0.5f * acceleration * deltatime;
+	}
+
+	void updateAccel(float deltatime) {
+		acceleration = totalForce / mass;
+	}
+
+	void updateFullVelo(float deltatime) {
+		velocity = halfVelocity + 0.5f * acceleration * deltatime;
 	}
 };

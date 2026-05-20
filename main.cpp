@@ -84,6 +84,7 @@ int main() {
 	}
 
 	glfwMakeContextCurrent(window);
+	glfwSwapInterval(1);
 	gladLoadGL();
 	glViewport(0, 0, WIDTH, HEIGHT);
 
@@ -95,22 +96,22 @@ int main() {
 	std::filesystem::path blankTexturePath{ R"(C:\Users\luken\source\repos\MoreOpengl C++\Textures\white.png)" };
 	int bwidth, bheight, bnrChannels;
 	unsigned char* blankData = stbi_load(blankTexturePath.string().c_str(), &bwidth, &bheight, &bnrChannels, 0);
-	
+
 	Object obj1({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, 1e10, 0.25f, Material(), true, blankData, bwidth, bheight, bnrChannels);
-	Object obj2({ 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.817f }, 1e6, 0.125f, Material(glm::vec3(0.0f, 1.0f, 1.0f) * 0.25f, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(0.5f), 4.0f), false, blankData, bwidth, bheight, bnrChannels);
-	Object obj3({ 2.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.57768f }, 1e6, 0.125f, Material(glm::vec3(1.0f, 1.0f, 0.0f) * 0.25f, glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(0.5f), 4.0f), false, blankData, bwidth, bheight, bnrChannels);
-	Object obj4({ 3.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.4717f }, 1e6, 0.125f, Material(glm::vec3(1.0f, 0.0f, 0.0f) * 0.25f, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.5f), 4.0f), false, blankData, bwidth, bheight, bnrChannels);
+	Object obj2({ 1.786f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.6115f }, 1e6, 0.125f, Material(glm::vec3(0.0f, 1.0f, 1.0f) * 0.25f, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(0.5f), 4.0f), false, blankData, bwidth, bheight, bnrChannels);
+	Object obj3({ 2.836f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.4851f }, 1e6, 0.125f, Material(glm::vec3(1.0f, 1.0f, 0.0f) * 0.25f, glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(0.5f), 4.0f), false, blankData, bwidth, bheight, bnrChannels);
+	Object obj4({ 3.715f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.4239f }, 1e6, 0.125f, Material(glm::vec3(1.0f, 0.0f, 0.0f) * 0.25f, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.5f), 4.0f), false, blankData, bwidth, bheight, bnrChannels);
 	objs.push_back(obj1);
 	objs.push_back(obj2);
 	objs.push_back(obj3);
 	objs.push_back(obj4);
 
 	if (blankData) stbi_image_free(blankData);
-	if (data) stbi_image_free(data);
+	// if (data) stbi_image_free(data);
 
 	//Light light({0.0f, 0.0f, 0.0f}, 0.075f);
 
-	float deltatime;
+	float deltatime = 1.0f / 60.0f;
 	float currentTime = glfwGetTime();
 	float previousTime = 0.0f;
 
@@ -118,7 +119,7 @@ int main() {
 	glfwSetCursorPosCallback(window, mouse_callback);
 
 	while (!glfwWindowShouldClose(window)) {
-		deltatime = currentTime - previousTime;
+		// deltatime = currentTime - previousTime;
 		previousTime = currentTime;
 		currentTime = glfwGetTime();
 
@@ -132,8 +133,36 @@ int main() {
 		shaderProgram.setMat4("projection", projection);
 		shaderProgram.setMat4("view", view);
 
-		for (int i = 0; i < objs.size(); i++) {
-			Object& obj = objs[i];
+		for (auto& obj : objs) {
+			obj.totalForce = glm::vec3(0.0f);
+		}
+
+		for (size_t i = 0; i < objs.size(); i++) {
+			for (size_t j = i + 1; j < objs.size(); j++) {
+				Object& obj = objs[i];
+				Object& obj_2 = objs[j];
+
+				float dist = glm::distance(obj.position, obj_2.position);
+
+				if (dist > 0.0001f) {
+					float dist2 = dist * dist;
+					float gForce = G_CONST * (obj.mass * obj_2.mass / dist2);
+					glm::vec3 dir = (obj_2.position - obj.position) / dist;
+
+					obj.totalForce += gForce * dir;
+					obj_2.totalForce -= gForce * dir;
+				}
+			}
+		}
+
+		for (auto& obj : objs) {
+			obj.updatePos(deltatime);
+			obj.updateHalfVelo(deltatime);
+			obj.updateAccel(deltatime);
+			obj.updateFullVelo(deltatime);
+		}
+
+		for (auto& obj : objs) {
 			glm::mat4 model = glm::mat4(1.0f);
 			shaderProgram.setMaterial("material", obj.material);
 			if (obj.isLight) {
@@ -144,17 +173,6 @@ int main() {
 			model = glm::translate(model, obj.position);
 			shaderProgram.setMat4("model", model);
 			obj.draw();
-
-			for (int j = i + 1; j < objs.size(); j++) {
-				Object& obj_2 = objs[j];
-				float dist2 = glm::distance(obj.position, obj_2.position) * glm::distance(obj.position, obj_2.position);
-				float gForce = G_CONST * (obj.mass * obj_2.mass / dist2);
-				glm::vec3 dir = glm::normalize(obj_2.position - obj.position);
-
-				obj.totalForce += gForce * dir;
-				obj_2.totalForce -= gForce * dir;
-			}
-			obj.accelerate(deltatime);
 		}
 
 		/*lightShaderProgram.use();
@@ -171,7 +189,7 @@ int main() {
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-	
+
 	for (auto& obj : objs) {
 		glDeleteVertexArrays(1, &obj.Vao.vao);
 		glDeleteBuffers(1, &obj.Vao.vbo);
